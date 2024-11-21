@@ -1,3 +1,5 @@
 <h1>Edit Article</h1>
 
 <%= render "form", article: @article %>
+
+<li><%= link_to "Cancel", article_path(@article) %></li>
