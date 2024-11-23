@@ -1,22 +1,40 @@
 class CommentsController < ApplicationController
-  http_basic_authenticate_with name: "DreadLord1377", password: "admin", only: :destroy
+  before_action :set_article
+
+  def index
+    @comments = @article.comments
+
+    render json: @comments
+  end
 
   def create
-    @article = Article.find(params[:article_id])
     @comment = @article.comments.create(comment_params)
+    render json: @comment, status: :created
+  end
 
-    redirect_to article_path(@article)
+  def update
+    set_comment
+    if @comment.update(comment_params)
+      render json: @comment
+    else
+      render json: @comment.errors, status: :unprocessable_entity
+    end
   end
 
   def destroy
-    @article = Article.find(params[:article_id])
-    @comment = @article.comments.find(params[:id])
+    set_comment
     @comment.destroy
-
-    redirect_to article_path(@article), status: :see_other
   end
 
   private
+    def set_article
+      @article = Article.find(params[:article_id])
+    end
+
+    def set_comment
+      @comment = @article.comments.find(params[:id])
+    end
+
     def comment_params
       params.expect(comment: [ :commenter, :body, :status ])
     end
