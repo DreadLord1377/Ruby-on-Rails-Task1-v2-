@@ -53,6 +53,7 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
+  # Use rspec gem for testing API
   gem "rspec-rails", "~> 7.1.0"
 end
 
