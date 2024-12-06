@@ -1,0 +1,278 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/":
+    get:
+      summary: list articles
+      tags:
+      - article
+      responses:
+        '200':
+          description: successful
+        '422':
+          description: invalid request
+  "/articles":
+    get:
+      summary: list articles
+      tags:
+      - article
+      responses:
+        '200':
+          description: successful
+        '422':
+          description: invalid request
+    post:
+      summary: create article
+      tags:
+      - article
+      parameters: []
+      responses:
+        '200':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Title example
+                body:
+                  type: string
+                  example: Text example
+                status:
+                  type: string
+                  example: public
+  "/articles/{id}":
+    get:
+      summary: show article
+      tags:
+      - article
+      parameters:
+      - name: id
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+        '404':
+          description: id not found
+    patch:
+      summary: update article
+      tags:
+      - article
+      parameters:
+      - name: id
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Title example update
+                body:
+                  type: string
+                  example: Text example update
+                status:
+                  type: string
+                  example: private
+    delete:
+      summary: delete article
+      tags:
+      - article
+      parameters:
+      - name: id
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+  "/articles/{article_id}/comments":
+    get:
+      summary: list comments
+      tags:
+      - comment
+      parameters:
+      - name: article_id
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+    post:
+      summary: create comment
+      tags:
+      - comment
+      parameters:
+      - name: article_id
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commenter:
+                  type: string
+                  example: Commenter example
+                body:
+                  type: string
+                  example: Text example
+                status:
+                  type: string
+                  example: public
+  "/articles/{article_id}/comments/{id}":
+    patch:
+      summary: update comment
+      tags:
+      - comment
+      parameters:
+      - name: article_id
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      - name: id
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commenter:
+                  type: string
+                  example: Commenter example update
+                body:
+                  type: string
+                  example: Text example update
+                status:
+                  type: string
+                  example: private
+    delete:
+      summary: delete comment
+      tags:
+      - comment
+      parameters:
+      - name: article_id
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      - name: id
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+servers:
+- url: http://{defaultHost}
+  variables:
+    defaultHost:
+      default: 127.0.0.1:3000
+components:
+  schemas:
+    article:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: '1'
+        title:
+          type: string
+          example: Article Title
+        body:
+          type: string
+          example: Article text
+        created_at:
+          type: string
+          example: '2024-12-03T12:47:49.796Z'
+        updated_at:
+          type: string
+          example: '2024-12-03T12:47:49.796Z'
+        status:
+          type: string
+          avaliable:
+          - public
+          - private
+          - archived
+          example: public
+      required:
+      - title
+      - body
+      - status
+    comment:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: '1'
+        commenter:
+          type: string
+          example: Article Title
+        body:
+          type: string
+          example: Article text
+        article_id:
+          type: integer
+          example: '1'
+        created_at:
+          type: string
+          example: '2024-12-03T12:47:49.796Z'
+        updated_at:
+          type: string
+          example: '2024-12-03T12:47:49.796Z'
+        status:
+          type: string
+          avaliable:
+          - public
+          - private
+          - archived
+          example: public
+      required:
+      - commenter
+      - body
+      - article_id
+      - status

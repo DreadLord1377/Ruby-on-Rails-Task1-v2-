@@ -24,14 +24,43 @@ RSpec.configure do |config|
       paths: {},
       servers: [
         {
-          url: 'https://{defaultHost}',
+          url: 'http://{defaultHost}',
           variables: {
             defaultHost: {
-              default: 'www.example.com'
+              default: '127.0.0.1:3000'
             }
           }
         }
-      ]
+      ],
+      components: {
+        schemas: {
+          article: {
+            type: 'object',
+            properties: {
+              id: { type: 'integer', example: '1' },
+              title: { type: 'string', example: 'Article Title' },
+              body: { type: 'string', example: 'Article text' },
+              created_at: { type: 'string', example: '2024-12-03T12:47:49.796Z' },
+              updated_at: { type: 'string', example: '2024-12-03T12:47:49.796Z' },
+              status: { type: 'string', avaliable: [ :public, :private, :archived ], example: 'public' }
+            },
+            required: %w[title body status]
+          },
+          comment: {
+            type: 'object',
+            properties: {
+              id: { type: 'integer', example: '1' },
+              commenter: { type: 'string', example: 'Article Title' },
+              body: { type: 'string', example: 'Article text' },
+              article_id: { type: 'integer', example: '1' },
+              created_at: { type: 'string', example: '2024-12-03T12:47:49.796Z' },
+              updated_at: { type: 'string', example: '2024-12-03T12:47:49.796Z' },
+              status: { type: 'string', avaliable: [ :public, :private, :archived ], example: 'public' }
+            },
+            required: %w[commenter body article_id status]
+          }
+        }
+      }    
     }
   }
 
