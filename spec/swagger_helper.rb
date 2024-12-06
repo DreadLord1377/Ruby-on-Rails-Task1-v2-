@@ -42,7 +42,7 @@ RSpec.configure do |config|
               body: { type: 'string', example: 'Article text' },
               created_at: { type: 'string', example: '2024-12-03T12:47:49.796Z' },
               updated_at: { type: 'string', example: '2024-12-03T12:47:49.796Z' },
-              status: { type: 'string', avaliable: [ :public, :private, :archived ], example: 'public' }
+              status: { type: 'string', avaliable_statuses: [ :public, :private, :archived ], example: 'public' }
             },
             required: %w[title body status]
           },
@@ -55,7 +55,7 @@ RSpec.configure do |config|
               article_id: { type: 'integer', example: '1' },
               created_at: { type: 'string', example: '2024-12-03T12:47:49.796Z' },
               updated_at: { type: 'string', example: '2024-12-03T12:47:49.796Z' },
-              status: { type: 'string', avaliable: [ :public, :private, :archived ], example: 'public' }
+              status: { type: 'string', avaliable_statuses: [ :public, :private, :archived ], example: 'public' }
             },
             required: %w[commenter body article_id status]
           }
