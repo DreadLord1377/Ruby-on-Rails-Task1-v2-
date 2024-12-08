@@ -12,6 +12,7 @@ RSpec.describe 'comments', type: :request do
 
       response(200, 'successful') do
         let(:article_id) { 1 }
+        schema '$ref' => '#components/schemas/comment'
 
         after do |example|
           example.metadata[:response][:content] = {
@@ -20,6 +21,7 @@ RSpec.describe 'comments', type: :request do
             }
           }
         end
+
         run_test!
       end
     end
@@ -32,7 +34,7 @@ RSpec.describe 'comments', type: :request do
       consumes "application/json"
       produces "application/json"
 
-      parameter name: :params, in: :body, schema: {
+      parameter name: :params, in: :body, required: :true, schema: {
         type: :object,
         properties: {
           commenter: { type: :string, example: 'Commenter example' },
@@ -44,6 +46,7 @@ RSpec.describe 'comments', type: :request do
       response(200, 'successful') do
         let(:article_id) { 1 }
         let(:params) { { commenter: 'Commenter', body: 'Comment text', status: 'public' } }
+        schema '$ref' => '#components/schemas/comment'
 
         after do |example|
           example.metadata[:response][:content] = {
@@ -52,6 +55,7 @@ RSpec.describe 'comments', type: :request do
             }
           }
         end
+
         run_test!
       end
     end
@@ -80,6 +84,7 @@ RSpec.describe 'comments', type: :request do
         let(:article_id) { 1 }
         let(:id) { 1 }
         let(:params) { { commenter: 'Commenter update', body: 'Comment text update', status: 'public' } }
+        schema '$ref' => '#components/schemas/comment'
 
         after do |example|
           example.metadata[:response][:content] = {
@@ -88,6 +93,7 @@ RSpec.describe 'comments', type: :request do
             }
           }
         end
+
         run_test!
       end
     end
@@ -111,6 +117,7 @@ RSpec.describe 'comments', type: :request do
             }
           }
         end
+
         run_test!
       end
     end

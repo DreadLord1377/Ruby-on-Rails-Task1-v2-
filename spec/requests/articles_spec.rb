@@ -9,6 +9,7 @@ RSpec.describe 'articles', type: :request do
       produces "application/json"
 
       response(200, 'successful') do
+        schema '$ref' => '#components/schemas/article'
 
         after do |example|
           example.metadata[:response][:content] = {
@@ -17,6 +18,7 @@ RSpec.describe 'articles', type: :request do
             }
           }
         end
+
         run_test!
       end
 
@@ -33,6 +35,7 @@ RSpec.describe 'articles', type: :request do
       produces "application/json"
 
       response(200, 'successful') do
+        schema '$ref' => '#components/schemas/article'
 
         after do |example|
           example.metadata[:response][:content] = {
@@ -41,6 +44,7 @@ RSpec.describe 'articles', type: :request do
             }
           }
         end
+
         run_test!
       end
 
@@ -55,7 +59,7 @@ RSpec.describe 'articles', type: :request do
       consumes "application/json"
       produces "application/json"
 
-      parameter name: :params, in: :body, schema: {
+      parameter name: :params, in: :body, required: :true, schema: {
         type: :object,
         properties: {
           title: { type: :string, example: 'Title example' },
@@ -66,6 +70,7 @@ RSpec.describe 'articles', type: :request do
 
       response(200, 'successful') do
         let(:params) { { title: 'Article', body: 'Article text', status: 'public' } }
+        schema '$ref' => '#components/schemas/article'
 
         after do |example|
           example.metadata[:response][:content] = {
@@ -74,6 +79,7 @@ RSpec.describe 'articles', type: :request do
             }
           }
         end
+
         run_test!
       end
     end
@@ -90,6 +96,7 @@ RSpec.describe 'articles', type: :request do
 
       response(200, 'successful') do
         let(:id) { 1 }
+        schema '$ref' => '#components/schemas/article'
 
         after do |example|
           example.metadata[:response][:content] = {
@@ -98,10 +105,21 @@ RSpec.describe 'articles', type: :request do
             }
           }
         end
+
         run_test!
       end
 
       response(404, 'id not found') do
+        let(:id) { -1 }
+
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+
         run_test!
       end
     end
@@ -126,6 +144,7 @@ RSpec.describe 'articles', type: :request do
       response(200, 'successful') do
         let(:id) { 1 }
         let(:params) { { title: 'Article update', body: 'Article text update', status: 'public' } }
+        schema '$ref' => '#components/schemas/article'
 
         after do |example|
           example.metadata[:response][:content] = {

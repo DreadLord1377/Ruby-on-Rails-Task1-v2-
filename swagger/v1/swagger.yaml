@@ -12,6 +12,10 @@ paths:
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#components/schemas/article"
         '422':
           description: invalid request
   "/articles":
@@ -22,6 +26,10 @@ paths:
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#components/schemas/article"
         '422':
           description: invalid request
     post:
@@ -32,6 +40,10 @@ paths:
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#components/schemas/article"
       requestBody:
         content:
           application/json:
@@ -47,6 +59,7 @@ paths:
                 status:
                   type: string
                   example: public
+        required: true
   "/articles/{id}":
     get:
       summary: show article
@@ -62,6 +75,10 @@ paths:
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#components/schemas/article"
         '404':
           description: id not found
     patch:
@@ -78,6 +95,10 @@ paths:
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#components/schemas/article"
       requestBody:
         content:
           application/json:
@@ -122,6 +143,10 @@ paths:
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#components/schemas/comment"
     post:
       summary: create comment
       tags:
@@ -136,6 +161,10 @@ paths:
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#components/schemas/comment"
       requestBody:
         content:
           application/json:
@@ -151,6 +180,7 @@ paths:
                 status:
                   type: string
                   example: public
+        required: true
   "/articles/{article_id}/comments/{id}":
     patch:
       summary: update comment
@@ -172,6 +202,10 @@ paths:
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#components/schemas/comment"
       requestBody:
         content:
           application/json:
@@ -239,6 +273,10 @@ components:
           - private
           - archived
           example: public
+        comments:
+          type: array
+          items:
+            "$ref": "#components/schemas/comment"
       required:
       - title
       - body
@@ -251,10 +289,10 @@ components:
           example: '1'
         commenter:
           type: string
-          example: Article Title
+          example: Commenter
         body:
           type: string
-          example: Article text
+          example: Comment text
         article_id:
           type: integer
           example: '1'
