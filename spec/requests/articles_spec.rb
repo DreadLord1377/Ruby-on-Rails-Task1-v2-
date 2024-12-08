@@ -9,7 +9,7 @@ RSpec.describe 'articles', type: :request do
       produces "application/json"
 
       response(200, 'successful') do
-        schema '$ref' => '#components/schemas/article'
+        schema '$ref' => '#components/schemas/article_show'
 
         after do |example|
           example.metadata[:response][:content] = {
@@ -35,7 +35,7 @@ RSpec.describe 'articles', type: :request do
       produces "application/json"
 
       response(200, 'successful') do
-        schema '$ref' => '#components/schemas/article'
+        schema '$ref' => '#components/schemas/article_show'
 
         after do |example|
           example.metadata[:response][:content] = {
@@ -70,7 +70,7 @@ RSpec.describe 'articles', type: :request do
 
       response(200, 'successful') do
         let(:params) { { title: 'Article', body: 'Article text', status: 'public' } }
-        schema '$ref' => '#components/schemas/article'
+        schema '$ref' => '#components/schemas/article_preview'
 
         after do |example|
           example.metadata[:response][:content] = {
@@ -96,7 +96,7 @@ RSpec.describe 'articles', type: :request do
 
       response(200, 'successful') do
         let(:id) { 1 }
-        schema '$ref' => '#components/schemas/article'
+        schema '$ref' => '#components/schemas/article_show'
 
         after do |example|
           example.metadata[:response][:content] = {
@@ -144,7 +144,7 @@ RSpec.describe 'articles', type: :request do
       response(200, 'successful') do
         let(:id) { 1 }
         let(:params) { { title: 'Article update', body: 'Article text update', status: 'public' } }
-        schema '$ref' => '#components/schemas/article'
+        schema '$ref' => '#components/schemas/article_preview'
 
         after do |example|
           example.metadata[:response][:content] = {
