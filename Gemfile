@@ -54,6 +54,8 @@ group :development, :test do
 
   gem "rspec-rails"
   gem "rswag"
+
+  gem 'byebug'
 end
 
 group :development do

@@ -8,7 +8,7 @@ RSpec.describe 'articles', type: :request do
 
       produces "application/json"
 
-      response(200, 'successful') do
+      response(200, 'Successful request') do
         schema '$ref' => '#components/schemas/article_show'
 
         after do |example|
@@ -19,10 +19,6 @@ RSpec.describe 'articles', type: :request do
           }
         end
 
-        run_test!
-      end
-
-      response(422, 'invalid request') do
         run_test!
       end
     end
@@ -34,7 +30,7 @@ RSpec.describe 'articles', type: :request do
 
       produces "application/json"
 
-      response(200, 'successful') do
+      response(200, 'Successful request') do
         schema '$ref' => '#components/schemas/article_show'
 
         after do |example|
@@ -45,10 +41,6 @@ RSpec.describe 'articles', type: :request do
           }
         end
 
-        run_test!
-      end
-
-      response(422, 'invalid request') do
         run_test!
       end
     end
@@ -68,7 +60,7 @@ RSpec.describe 'articles', type: :request do
         }
       }
 
-      response(200, 'successful') do
+      response(201, 'Successful request') do
         let(:params) { { title: 'Article', body: 'Article text', status: 'public' } }
         schema '$ref' => '#components/schemas/article_preview'
 
@@ -80,6 +72,11 @@ RSpec.describe 'articles', type: :request do
           }
         end
 
+        run_test!
+      end
+
+      response(422, 'Invalid request (Can not parse given data)') do
+        schema '$ref' => '#/components/schemas/errors_object'
         run_test!
       end
     end
@@ -94,7 +91,7 @@ RSpec.describe 'articles', type: :request do
 
       parameter name: :id, in: :path, type: :integer, example: 1, required: :true
 
-      response(200, 'successful') do
+      response(200, 'Successful request') do
         let(:id) { 1 }
         schema '$ref' => '#components/schemas/article_show'
 
@@ -109,17 +106,8 @@ RSpec.describe 'articles', type: :request do
         run_test!
       end
 
-      response(404, 'id not found') do
-        let(:id) { -1 }
-
-        after do |example|
-          example.metadata[:response][:content] = {
-            'application/json' => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
-          }
-        end
-
+      response(404, 'Invalid request (Id not found)') do
+        schema '$ref' => '#/components/schemas/errors_object'      
         run_test!
       end
     end
@@ -141,7 +129,7 @@ RSpec.describe 'articles', type: :request do
         }
       }   
 
-      response(200, 'successful') do
+      response(200, 'Successful request') do
         let(:id) { 1 }
         let(:params) { { title: 'Article update', body: 'Article text update', status: 'public' } }
         schema '$ref' => '#components/schemas/article_preview'
@@ -155,6 +143,16 @@ RSpec.describe 'articles', type: :request do
         end
         run_test!
       end
+
+      response(404, 'Invalid request (Id not found)') do
+        schema '$ref' => '#/components/schemas/errors_object'      
+        run_test!
+      end
+      
+      response(422, 'Invalid request (Can not parse given data)') do
+        schema '$ref' => '#/components/schemas/errors_object'
+        run_test!
+      end
     end
 
     delete('delete article') do
@@ -164,7 +162,7 @@ RSpec.describe 'articles', type: :request do
 
       parameter name: :id, in: :path, type: :integer, example: 1, required: :true
 
-      response(200, 'successful') do
+      response(200, 'Successful request') do
         let(:id) { 1 }
 
         after do |example|
@@ -174,6 +172,11 @@ RSpec.describe 'articles', type: :request do
             }
           }
         end
+        run_test!
+      end
+
+      response(404, 'Invalid request (Id not found)') do
+        schema '$ref' => '#/components/schemas/errors_object'      
         run_test!
       end
     end

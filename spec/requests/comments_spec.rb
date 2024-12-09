@@ -10,7 +10,7 @@ RSpec.describe 'comments', type: :request do
 
       produces "application/json"
 
-      response(200, 'successful') do
+      response(200, 'Successful request') do
         let(:article_id) { 1 }
         schema '$ref' => '#components/schemas/comment'
 
@@ -22,6 +22,11 @@ RSpec.describe 'comments', type: :request do
           }
         end
 
+        run_test!
+      end
+
+      response(404, 'Invalid request (Id not found)') do
+        schema '$ref' => '#/components/schemas/errors_object'      
         run_test!
       end
     end
@@ -43,7 +48,7 @@ RSpec.describe 'comments', type: :request do
         }
       }
 
-      response(200, 'successful') do
+      response(201, 'Successful request') do
         let(:article_id) { 1 }
         let(:params) { { commenter: 'Commenter', body: 'Comment text', status: 'public' } }
         schema '$ref' => '#components/schemas/comment'
@@ -58,6 +63,11 @@ RSpec.describe 'comments', type: :request do
 
         run_test!
       end
+
+      response(404, 'Invalid request (Id not found)') do
+        schema '$ref' => '#/components/schemas/errors_object'      
+        run_test!
+      end    
     end
   end
 
@@ -80,7 +90,7 @@ RSpec.describe 'comments', type: :request do
         }
       }
 
-      response(200, 'successful') do
+      response(200, 'Successful request') do
         let(:article_id) { 1 }
         let(:id) { 1 }
         let(:params) { { commenter: 'Commenter update', body: 'Comment text update', status: 'public' } }
@@ -96,6 +106,16 @@ RSpec.describe 'comments', type: :request do
 
         run_test!
       end
+
+      response(404, 'Invalid request (Id not found)') do
+        schema '$ref' => '#/components/schemas/errors_object'      
+        run_test!
+      end
+
+      response(422, 'Invalid request (Can not parse given data)') do
+        schema '$ref' => '#/components/schemas/errors_object'
+        run_test!
+      end
     end
 
     delete('delete comment') do
@@ -106,7 +126,7 @@ RSpec.describe 'comments', type: :request do
 
       produces "application/json"
 
-      response(200, 'successful') do
+      response(200, 'Successful request') do
         let(:article_id) { 1 }
         let(:id) { 1 }
 
@@ -118,6 +138,11 @@ RSpec.describe 'comments', type: :request do
           }
         end
 
+        run_test!
+      end
+
+      response(404, 'Invalid request (Id not found)') do
+        schema '$ref' => '#/components/schemas/errors_object'      
         run_test!
       end
     end

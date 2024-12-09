@@ -17,7 +17,7 @@ class ArticlesController < ApplicationController
     if @article.save
       render json: @article, status: :created
     else
-      render json: @article.errors, status: :unprocessable_entity
+      render json: { error: '422: Invalid request (Can not parse given data)', details: @article.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -26,7 +26,7 @@ class ArticlesController < ApplicationController
     if @article.update(article_params)
       render json: @article
     else
-      render json: @article.errors, status: :unprocessable_entity
+      render json: { error: '422: Invalid request (Can not parse given data)', details: @article.errors.full_messages }, status: :unprocessable_entity
     end
   end
 

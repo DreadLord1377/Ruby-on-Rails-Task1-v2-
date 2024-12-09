@@ -17,7 +17,7 @@ class CommentsController < ApplicationController
     if @comment.update(comment_params)
       render json: @comment
     else
-      render json: @comment.errors, status: :unprocessable_entity
+      render json: { error: '422: Invalid request (Can not parse given data)', details: @article.errors.full_messages }, status: :unprocessable_entity
     end
   end
 

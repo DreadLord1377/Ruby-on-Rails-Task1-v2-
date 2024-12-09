@@ -71,6 +71,19 @@ RSpec.configure do |config|
               status: { type: 'string', avaliable_statuses: [ :public, :private, :archived ], example: 'public' }
             },
             required: %w[commenter body article_id status]
+          },
+          errors_object: {
+            type: 'object',
+            properties: {
+              errors: { '$ref' => '#/components/schemas/errors_map' }
+            }
+          },
+          errors_map: {
+            type: 'object',
+            additionalProperties: {
+              type: 'array',
+              items: { type: 'string' }
+            }
           }
         }
       }    

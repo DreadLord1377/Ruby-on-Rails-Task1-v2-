@@ -11,13 +11,11 @@ paths:
       - article
       responses:
         '200':
-          description: successful
+          description: Successful request
           content:
             application/json:
               schema:
-                "$ref": "#components/schemas/article"
-        '422':
-          description: invalid request
+                "$ref": "#components/schemas/article_show"
   "/articles":
     get:
       summary: list articles
@@ -25,25 +23,29 @@ paths:
       - article
       responses:
         '200':
-          description: successful
+          description: Successful request
           content:
             application/json:
               schema:
-                "$ref": "#components/schemas/article"
-        '422':
-          description: invalid request
+                "$ref": "#components/schemas/article_show"
     post:
       summary: create article
       tags:
       - article
       parameters: []
       responses:
-        '200':
-          description: successful
+        '201':
+          description: Successful request
           content:
             application/json:
               schema:
-                "$ref": "#components/schemas/article"
+                "$ref": "#components/schemas/article_preview"
+        '422':
+          description: Invalid request (Can not parse given data)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
       requestBody:
         content:
           application/json:
@@ -74,13 +76,17 @@ paths:
           type: integer
       responses:
         '200':
-          description: successful
+          description: Successful request
           content:
             application/json:
               schema:
-                "$ref": "#components/schemas/article"
+                "$ref": "#components/schemas/article_show"
         '404':
-          description: id not found
+          description: Invalid request (Id not found)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
     patch:
       summary: update article
       tags:
@@ -94,11 +100,23 @@ paths:
           type: integer
       responses:
         '200':
-          description: successful
+          description: Successful request
           content:
             application/json:
               schema:
-                "$ref": "#components/schemas/article"
+                "$ref": "#components/schemas/article_preview"
+        '404':
+          description: Invalid request (Id not found)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '422':
+          description: Invalid request (Can not parse given data)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
       requestBody:
         content:
           application/json:
@@ -127,7 +145,13 @@ paths:
           type: integer
       responses:
         '200':
-          description: successful
+          description: Successful request
+        '404':
+          description: Invalid request (Id not found)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
   "/articles/{article_id}/comments":
     get:
       summary: list comments
@@ -142,11 +166,17 @@ paths:
           type: integer
       responses:
         '200':
-          description: successful
+          description: Successful request
           content:
             application/json:
               schema:
                 "$ref": "#components/schemas/comment"
+        '404':
+          description: Invalid request (Id not found)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
     post:
       summary: create comment
       tags:
@@ -159,12 +189,18 @@ paths:
         schema:
           type: integer
       responses:
-        '200':
-          description: successful
+        '201':
+          description: Successful request
           content:
             application/json:
               schema:
                 "$ref": "#components/schemas/comment"
+        '404':
+          description: Invalid request (Id not found)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
       requestBody:
         content:
           application/json:
@@ -201,11 +237,23 @@ paths:
           type: integer
       responses:
         '200':
-          description: successful
+          description: Successful request
           content:
             application/json:
               schema:
                 "$ref": "#components/schemas/comment"
+        '404':
+          description: Invalid request (Id not found)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '422':
+          description: Invalid request (Can not parse given data)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
       requestBody:
         content:
           application/json:
@@ -240,7 +288,13 @@ paths:
           type: integer
       responses:
         '200':
-          description: successful
+          description: Successful request
+        '404':
+          description: Invalid request (Id not found)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
 servers:
 - url: http://{defaultHost}
   variables:
@@ -248,7 +302,36 @@ servers:
       default: 127.0.0.1:3000
 components:
   schemas:
-    article:
+    article_preview:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: '1'
+        title:
+          type: string
+          example: Article Title
+        body:
+          type: string
+          example: Article text
+        created_at:
+          type: string
+          example: '2024-12-03T12:47:49.796Z'
+        updated_at:
+          type: string
+          example: '2024-12-03T12:47:49.796Z'
+        status:
+          type: string
+          avaliable_statuses:
+          - public
+          - private
+          - archived
+          example: public
+      required:
+      - title
+      - body
+      - status
+    article_show:
       type: object
       properties:
         id:
@@ -314,3 +397,14 @@ components:
       - body
       - article_id
       - status
+    errors_object:
+      type: object
+      properties:
+        errors:
+          "$ref": "#/components/schemas/errors_map"
+    errors_map:
+      type: object
+      additionalProperties:
+        type: array
+        items:
+          type: string
