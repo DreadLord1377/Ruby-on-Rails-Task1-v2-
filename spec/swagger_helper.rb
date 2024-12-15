@@ -42,9 +42,10 @@ RSpec.configure do |config|
               body: { type: 'string', example: 'Article text' },
               created_at: { type: 'string', example: '2024-12-03T12:47:49.796Z' },
               updated_at: { type: 'string', example: '2024-12-03T12:47:49.796Z' },
-              status: { type: 'string', avaliable_statuses: [ :public, :private, :archived ], example: 'public' }, 
+              status: { type: 'string', example: 'public' }, 
             },
-            required: %w[title body status]
+            required: [ 'title', 'body', 'status' ],
+            additionalProperties: false
           },
           article_show: {
             type: 'object',
@@ -54,10 +55,15 @@ RSpec.configure do |config|
               body: { type: 'string', example: 'Article text' },
               created_at: { type: 'string', example: '2024-12-03T12:47:49.796Z' },
               updated_at: { type: 'string', example: '2024-12-03T12:47:49.796Z' },
-              status: { type: 'string', avaliable_statuses: [ :public, :private, :archived ], example: 'public' }, 
+              status: { type: 'string', example: 'public' },
               comments: { type: 'array', items: { '$ref' => '#components/schemas/comment' } }
             },
-            required: %w[title body status]
+            required: [ 'title', 'body', 'status' ],
+            additionalProperties: false
+          },
+          article_show_list: {
+            type: 'array',
+            items: { '$ref' => '#components/schemas/article_show' }
           },
           comment: {
             type: 'object',
@@ -68,22 +74,27 @@ RSpec.configure do |config|
               article_id: { type: 'integer', example: '1' },
               created_at: { type: 'string', example: '2024-12-03T12:47:49.796Z' },
               updated_at: { type: 'string', example: '2024-12-03T12:47:49.796Z' },
-              status: { type: 'string', avaliable_statuses: [ :public, :private, :archived ], example: 'public' }
+              status: { type: 'string', example: 'public' }
             },
-            required: %w[commenter body article_id status]
+            required: [ 'commenter', 'body', 'article_id', 'status' ],
+            additionalProperties: false
           },
-          errors_object: {
+          comment_list: {
+            type: 'array',
+            items: { '$ref' => '#components/schemas/comment' }
+          },
+          error: {
             type: 'object',
             properties: {
-              errors: { '$ref' => '#/components/schemas/errors_map' }
-            }
+              error: { type: 'string' },
+              details: { type: 'array', items: { type: 'string' } }
+            },
+            required: [ 'error', 'details' ],
+            additionalProperties: false
           },
-          errors_map: {
-            type: 'object',
-            additionalProperties: {
-              type: 'array',
-              items: { type: 'string' }
-            }
+          errors: {
+            type: 'array',
+            items: { '$ref' => '#components/schemas/error' }
           }
         }
       }    

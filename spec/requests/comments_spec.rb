@@ -10,23 +10,21 @@ RSpec.describe 'comments', type: :request do
 
       produces "application/json"
 
-      response(200, 'Successful request') do
-        let(:article_id) { 1 }
-        schema '$ref' => '#components/schemas/comment'
-
-        after do |example|
-          example.metadata[:response][:content] = {
-            'application/json' => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
+      after do |example|
+        example.metadata[:response][:content] = {
+          'application/json' => {
+            example: JSON.parse(response.body, symbolize_names: true)
           }
-        end
-
-        run_test!
+        }
       end
 
-      response(404, 'Invalid request (Id not found)') do
-        schema '$ref' => '#/components/schemas/errors_object'      
+      response(200, 'Successful request') do
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:article_id) { 1 }
+        let!(:comment_1) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
+        let!(:comment_2) { article.comments.create(commenter: 'Commenter2', body: 'Comment text2', status: 'public') }
+        schema '$ref' => '#components/schemas/comment_list'
+
         run_test!
       end
     end
@@ -48,26 +46,39 @@ RSpec.describe 'comments', type: :request do
         }
       }
 
-      response(201, 'Successful request') do
-        let(:article_id) { 1 }
-        let(:params) { { commenter: 'Commenter', body: 'Comment text', status: 'public' } }
-        schema '$ref' => '#components/schemas/comment'
-
-        after do |example|
-          example.metadata[:response][:content] = {
-            'application/json' => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
+      after do |example|
+        example.metadata[:response][:content] = {
+          'application/json' => {
+            example: JSON.parse(response.body, symbolize_names: true)
           }
-        end
+        }
+      end
+
+      response(201, 'Successful request') do
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:article_id) { 1 }
+        let!(:params) { { commenter: 'Commenter', body: 'Comment text', status: 'public' } }
+        schema '$ref' => '#components/schemas/comment'
 
         run_test!
       end
 
-      response(404, 'Invalid request (Id not found)') do
-        schema '$ref' => '#/components/schemas/errors_object'      
+      response(404, 'Invalid request (Article id not found)') do
+        let!(:article_id) { 1 }
+        let!(:params) { { commenter: 'Commenter', body: 'Comment text', status: 'public' } }
+        schema '$ref' => '#/components/schemas/error'
+
         run_test!
-      end    
+      end
+
+      response(422, 'Invalid request (Can not parse given data)') do
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:article_id) { 1 }
+        let!(:params) { { commenter: '', body: 'Comment', status: 'public' } }
+        schema '$ref' => '#/components/schemas/error'
+
+        run_test!
+      end
     end
   end
 
@@ -90,30 +101,50 @@ RSpec.describe 'comments', type: :request do
         }
       }
 
+      after do |example|
+        example.metadata[:response][:content] = {
+          'application/json' => {
+            example: JSON.parse(response.body, symbolize_names: true)
+          }
+        }
+      end
+
       response(200, 'Successful request') do
         let(:article_id) { 1 }
         let(:id) { 1 }
         let(:params) { { commenter: 'Commenter update', body: 'Comment text update', status: 'public' } }
         schema '$ref' => '#components/schemas/comment'
 
-        after do |example|
-          example.metadata[:response][:content] = {
-            'application/json' => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
-          }
-        end
+        run_test!
+      end
+
+      response(404, 'Invalid request (Article id not found)') do
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:article_id) { 2 }
+        let!(:params) { { commenter: 'Commenter', body: 'Comment text', status: 'public' } }
+        let(:id) { 1 }
+        schema '$ref' => '#/components/schemas/error'
 
         run_test!
       end
 
-      response(404, 'Invalid request (Id not found)') do
-        schema '$ref' => '#/components/schemas/errors_object'      
+      response(404, 'Invalid request (Comment id not found)') do
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:article_id) { 1 }
+        let!(:params) { { commenter: 'Commenter', body: 'Comment text', status: 'public' } }
+        let(:id) { 2 }
+        schema '$ref' => '#/components/schemas/error'
+        
         run_test!
       end
 
       response(422, 'Invalid request (Can not parse given data)') do
-        schema '$ref' => '#/components/schemas/errors_object'
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:article_id) { 1 }
+        let!(:params) { { commenter: '', body: 'Comment', status: 'public' } }
+        let(:id) { 1 }
+        schema '$ref' => '#/components/schemas/error'
+
         run_test!
       end
     end
@@ -126,23 +157,40 @@ RSpec.describe 'comments', type: :request do
 
       produces "application/json"
 
-      response(200, 'Successful request') do
-        let(:article_id) { 1 }
-        let(:id) { 1 }
-
-        after do |example|
-          example.metadata[:response][:content] = {
-            'application/json' => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
+      after do |example|
+        example.metadata[:response][:content] = {
+          'application/json' => {
+            example: JSON.parse(response.body, symbolize_names: true)
           }
-        end
+        }
+      end
+
+      response(204, 'Successful request') do
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:article_id) { 1 }
+        let!(:comment) { article.comments.create(commenter: 'Comment', body: 'Comment text', status: 'public') }
+        let(:id) { 1 }
 
         run_test!
       end
 
-      response(404, 'Invalid request (Id not found)') do
-        schema '$ref' => '#/components/schemas/errors_object'      
+      response(404, 'Invalid request (Article id not found)') do
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:article_id) { 2 }
+        let!(:comment) { article.comments.create(commenter: 'Comment', body: 'Comment text', status: 'public') }
+        let(:id) { 1 }
+        schema '$ref' => '#/components/schemas/error'
+
+        run_test!
+      end
+
+      response(404, 'Invalid request (Comment id not found)') do
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:article_id) { 1 }
+        let!(:comment) { article.comments.create(commenter: 'Comment', body: 'Comment text', status: 'public') }
+        let(:id) { 2 }
+        schema '$ref' => '#/components/schemas/error'
+
         run_test!
       end
     end

@@ -1,5 +1,7 @@
 class ArticlesController < ApplicationController
   
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
+
   def index
     @articles = Article.all
 
@@ -8,7 +10,7 @@ class ArticlesController < ApplicationController
 
   def show
     set_article
-    render json: [@article, @article.comments]
+    render json: @article
   end
 
   def create
@@ -42,5 +44,9 @@ class ArticlesController < ApplicationController
 
     def article_params
       params.expect(article: [ :title, :body, :status ])
+    end
+
+    def not_found
+      head 404
     end
 end

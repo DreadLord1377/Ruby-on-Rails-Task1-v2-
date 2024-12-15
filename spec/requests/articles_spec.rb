@@ -8,16 +8,45 @@ RSpec.describe 'articles', type: :request do
 
       produces "application/json"
 
-      response(200, 'Successful request') do
-        schema '$ref' => '#components/schemas/article_show'
-
-        after do |example|
-          example.metadata[:response][:content] = {
-            'application/json' => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
+      after do |example|
+        example.metadata[:response][:content] = {
+          'application/json' => {
+            example: JSON.parse(response.body, symbolize_names: true)
           }
-        end
+        }
+      end
+
+      response(200, 'Successful request') do
+        let!(:article_1) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:article_2) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+
+        schema '$ref' => '#components/schemas/article_show_list'
+
+        #after do |example|
+          #content = example.metadata[:response][:content] || {}
+          #example_spec = {
+            #{}"application/json"=>{
+              #examples: {
+                #test_example: {
+                  #value: JSON.parse(response.body, symbolize_names: true)
+                #}
+              #}
+            #}
+          #}
+          #example.metadata[:response][:content] = content.deep_merge(example_spec)
+        #end
+
+        #after(:each, operation: true, use_as_request_example: true) do |spec|
+          #spec.metadata[:operation][:request_examples] ||= []
+
+          #example = {
+            #value: JSON.parse(request.body.string, symbolize_names: true),
+            #name: 'request_example_1',
+            #summary: 'A request example'
+          #}
+
+          #spec.metadata[:operation][:request_examples] << example
+        #end
 
         run_test!
       end
@@ -30,16 +59,19 @@ RSpec.describe 'articles', type: :request do
 
       produces "application/json"
 
-      response(200, 'Successful request') do
-        schema '$ref' => '#components/schemas/article_show'
-
-        after do |example|
-          example.metadata[:response][:content] = {
-            'application/json' => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
+      after do |example|
+        example.metadata[:response][:content] = {
+          'application/json' => {
+            example: JSON.parse(response.body, symbolize_names: true)
           }
-        end
+        }
+      end
+
+      response(200, 'Successful request') do
+        let!(:article_1) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:article_2) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+
+        schema '$ref' => '#components/schemas/article_show_list'
 
         run_test!
       end
@@ -60,23 +92,25 @@ RSpec.describe 'articles', type: :request do
         }
       }
 
-      response(201, 'Successful request') do
-        let(:params) { { title: 'Article', body: 'Article text', status: 'public' } }
-        schema '$ref' => '#components/schemas/article_preview'
-
-        after do |example|
-          example.metadata[:response][:content] = {
-            'application/json' => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
+      after do |example|
+        example.metadata[:response][:content] = {
+          'application/json' => {
+            example: JSON.parse(response.body, symbolize_names: true)
           }
-        end
+        }
+      end
+
+      response(201, 'Successful request') do
+        let!(:params) { { title: 'Article', body: 'Article text', status: 'public' } }
+        schema '$ref' => '#components/schemas/article_show'
 
         run_test!
       end
 
       response(422, 'Invalid request (Can not parse given data)') do
-        schema '$ref' => '#/components/schemas/errors_object'
+        let!(:params) { { title: '', body: 'Article', status: 'public' } }
+        schema '$ref' => '#/components/schemas/error'
+
         run_test!
       end
     end
@@ -91,23 +125,27 @@ RSpec.describe 'articles', type: :request do
 
       parameter name: :id, in: :path, type: :integer, example: 1, required: :true
 
-      response(200, 'Successful request') do
-        let(:id) { 1 }
-        schema '$ref' => '#components/schemas/article_show'
-
-        after do |example|
-          example.metadata[:response][:content] = {
-            'application/json' => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
+      after do |example|
+        example.metadata[:response][:content] = {
+          'application/json' => {
+            example: JSON.parse(response.body, symbolize_names: true)
           }
-        end
+        }
+      end
+
+      response(200, 'Successful request') do
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:id) { 1 }
+        schema '$ref' => '#components/schemas/article_show'
 
         run_test!
       end
 
       response(404, 'Invalid request (Id not found)') do
-        schema '$ref' => '#/components/schemas/errors_object'      
+        let!(:article) { Article.create(id: 1, title: 'Article', body: 'Article text', status: 'public') }
+        let!(:id) { 2 }
+        schema '$ref' => '#/components/schemas/error'
+
         run_test!
       end
     end
@@ -129,28 +167,39 @@ RSpec.describe 'articles', type: :request do
         }
       }   
 
-      response(200, 'Successful request') do
-        let(:id) { 1 }
-        let(:params) { { title: 'Article update', body: 'Article text update', status: 'public' } }
-        schema '$ref' => '#components/schemas/article_preview'
-
-        after do |example|
-          example.metadata[:response][:content] = {
-            'application/json' => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
+      after do |example|
+        example.metadata[:response][:content] = {
+          'application/json' => {
+            example: JSON.parse(response.body, symbolize_names: true)
           }
-        end
+        }
+      end
+
+      response(200, 'Successful request') do
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:params) { { title: 'Article update', body: 'Article text update', status: 'public' } }
+        let!(:id) { 1 }
+
+        schema '$ref' => '#components/schemas/article_show'
+
         run_test!
       end
 
       response(404, 'Invalid request (Id not found)') do
-        schema '$ref' => '#/components/schemas/errors_object'      
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:params) { { title: 'Article update', body: 'Article text update', status: 'public' } }
+        let!(:id) { 2 }
+        schema '$ref' => '#/components/schemas/error'
+
         run_test!
       end
       
       response(422, 'Invalid request (Can not parse given data)') do
-        schema '$ref' => '#/components/schemas/errors_object'
+        let!(:article) { Article.create(title: '', body: 'Article text', status: 'public') }
+        let!(:params) { { title: '', body: 'update', status: 'public' } }
+        let!(:id) { 1 }
+        schema '$ref' => '#/components/schemas/error'
+
         run_test!
       end
     end
@@ -162,21 +211,26 @@ RSpec.describe 'articles', type: :request do
 
       parameter name: :id, in: :path, type: :integer, example: 1, required: :true
 
-      response(200, 'Successful request') do
+      after do |example|
+        example.metadata[:response][:content] = {
+          'application/json' => {
+            example: JSON.parse(response.body, symbolize_names: true)
+          }
+        }
+      end
+
+      response(204, 'Successful request') do
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
         let(:id) { 1 }
 
-        after do |example|
-          example.metadata[:response][:content] = {
-            'application/json' => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
-          }
-        end
         run_test!
       end
 
       response(404, 'Invalid request (Id not found)') do
-        schema '$ref' => '#/components/schemas/errors_object'      
+        let!(:article) { Article.create(id: 1, title: 'Article', body: 'Article text', status: 'public') }
+        let!(:id) { 2 }
+        schema '$ref' => '#/components/schemas/error'
+
         run_test!
       end
     end
