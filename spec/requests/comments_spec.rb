@@ -3,12 +3,12 @@ require 'swagger_helper'
 RSpec.describe 'comments', type: :request do
 
   path '/articles/{article_id}/comments' do
-    get('list comments') do
+    get('list comments (first 10)') do
       tags 'comment'
 
-      parameter name: :article_id, in: :path, type: :integer, example: 1, required: :true
-
       produces "application/json"
+
+      parameter name: :article_id, in: :path, type: :integer, example: 1, required: :true
 
       after do |example|
         example.metadata[:response][:content] = {
@@ -23,6 +23,8 @@ RSpec.describe 'comments', type: :request do
         let!(:article_id) { article.id }
         let!(:comment_1) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
         let!(:comment_2) { article.comments.create(commenter: 'Commenter2', body: 'Comment text2', status: 'public') }
+        let!(:page) { 1 }
+        let!(:per_page) { 10 }
         schema '$ref' => '#components/schemas/comment_list'
 
         run_test!
@@ -32,10 +34,10 @@ RSpec.describe 'comments', type: :request do
     post('create comment') do
       tags 'comment'
 
-      parameter name: :article_id, in: :path, type: :integer, example: 1, required: :true
-
       consumes "application/json"
       produces "application/json"
+
+      parameter name: :article_id, in: :path, type: :integer, example: 1, required: :true
 
       parameter name: :params, in: :body, required: :true, schema: {
         type: :object,
@@ -76,6 +78,69 @@ RSpec.describe 'comments', type: :request do
         let!(:article_id) { article.id }
         let!(:params) { { commenter: '', body: 'Comment', status: 'public' } }
         schema '$ref' => '#/components/schemas/error'
+
+        run_test!
+      end
+    end
+  end
+
+  path '/articles/{article_id}/comments?page={page}' do
+    get('list only necessary comments') do
+      tags 'comment'
+
+      parameter name: :article_id, in: :path, type: :integer, example: 1, required: :true
+      parameter name: :page, in: :path, type: :integer, example: 1, required: :true
+
+      produces "application/json"
+
+      after do |example|
+        example.metadata[:response][:content] = {
+          'application/json' => {
+            example: JSON.parse(response.body, symbolize_names: true)
+          }
+        }
+      end
+
+      response(200, 'Successful request') do
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:article_id) { article.id }
+        let!(:comment_1) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
+        let!(:comment_2) { article.comments.create(commenter: 'Commenter2', body: 'Comment text2', status: 'public') }
+        let!(:page) { 1 }
+        let!(:per_page) { 10 }
+        schema '$ref' => '#components/schemas/comment_list'
+
+        run_test!
+      end
+    end
+  end
+
+  path '/articles/{article_id}/comments?page={page}&per_page={per_page}' do
+    get('list only necessary comments') do
+      tags 'comment'
+
+      parameter name: :article_id, in: :path, type: :integer, example: 1, required: :true
+      parameter name: :page, in: :path, type: :integer, example: 1, required: :true
+      parameter name: :per_page, in: :path, type: :integer, example: 10, required: :true
+
+      produces "application/json"
+
+      after do |example|
+        example.metadata[:response][:content] = {
+          'application/json' => {
+            example: JSON.parse(response.body, symbolize_names: true)
+          }
+        }
+      end
+
+      response(200, 'Successful request') do
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:article_id) { article.id }
+        let!(:comment_1) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
+        let!(:comment_2) { article.comments.create(commenter: 'Commenter2', body: 'Comment text2', status: 'public') }
+        let!(:page) { 1 }
+        let!(:per_page) { 10 }
+        schema '$ref' => '#components/schemas/comment_list'
 
         run_test!
       end

@@ -6,7 +6,7 @@ info:
 paths:
   "/":
     get:
-      summary: 'list articles (first 10) '
+      summary: list articles (first 10)
       tags:
       - article
       responses:
@@ -230,7 +230,7 @@ paths:
           description: Invalid request (Id not found)
   "/articles/{article_id}/comments":
     get:
-      summary: list comments
+      summary: list comments (first 10)
       tags:
       - comment
       parameters:
@@ -289,6 +289,62 @@ paths:
                   type: string
                   example: public
         required: true
+  "/articles/{article_id}/comments?page={page}":
+    get:
+      summary: list only necessary comments
+      tags:
+      - comment
+      parameters:
+      - name: article_id
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      - name: page
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                "$ref": "#components/schemas/comment_list"
+  "/articles/{article_id}/comments?page={page}&per_page={per_page}":
+    get:
+      summary: list only necessary comments
+      tags:
+      - comment
+      parameters:
+      - name: article_id
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      - name: page
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      - name: per_page
+        in: path
+        example: 10
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                "$ref": "#components/schemas/comment_list"
   "/articles/{article_id}/comments/{id}":
     patch:
       summary: update comment

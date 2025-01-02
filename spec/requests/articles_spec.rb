@@ -3,7 +3,7 @@ require 'swagger_helper'
 RSpec.describe 'articles', type: :request do
 
   path '/' do
-    get('list articles (first 10) ') do
+    get('list articles (first 10)') do
       tags 'article'
 
       produces "application/json"
