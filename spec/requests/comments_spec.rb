@@ -20,7 +20,7 @@ RSpec.describe 'comments', type: :request do
 
       response(200, 'Successful request') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { 1 }
+        let!(:article_id) { article.id }
         let!(:comment_1) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
         let!(:comment_2) { article.comments.create(commenter: 'Commenter2', body: 'Comment text2', status: 'public') }
         schema '$ref' => '#components/schemas/comment_list'
@@ -56,7 +56,7 @@ RSpec.describe 'comments', type: :request do
 
       response(201, 'Successful request') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { 1 }
+        let!(:article_id) { article.id }
         let!(:params) { { commenter: 'Commenter', body: 'Comment text', status: 'public' } }
         schema '$ref' => '#components/schemas/comment'
 
@@ -64,16 +64,16 @@ RSpec.describe 'comments', type: :request do
       end
 
       response(404, 'Invalid request (Article id not found)') do
-        let!(:article_id) { 1 }
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:article_id) { 4534654 }
         let!(:params) { { commenter: 'Commenter', body: 'Comment text', status: 'public' } }
-        schema '$ref' => '#/components/schemas/error'
 
         run_test!
       end
 
       response(422, 'Invalid request (Can not parse given data)') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { 1 }
+        let!(:article_id) { article.id }
         let!(:params) { { commenter: '', body: 'Comment', status: 'public' } }
         schema '$ref' => '#/components/schemas/error'
 
@@ -110,9 +110,12 @@ RSpec.describe 'comments', type: :request do
       end
 
       response(200, 'Successful request') do
-        let(:article_id) { 1 }
-        let(:id) { 1 }
-        let(:params) { { commenter: 'Commenter update', body: 'Comment text update', status: 'public' } }
+        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        let!(:article_id) { article.id }
+        let!(:comment) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
+        let!(:id) { comment.id }
+        let!(:params) { { commenter: 'Commenter update', body: 'Comment text update', status: 'public' } }
+
         schema '$ref' => '#components/schemas/comment'
 
         run_test!
@@ -120,29 +123,31 @@ RSpec.describe 'comments', type: :request do
 
       response(404, 'Invalid request (Article id not found)') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { 2 }
-        let!(:params) { { commenter: 'Commenter', body: 'Comment text', status: 'public' } }
-        let(:id) { 1 }
-        schema '$ref' => '#/components/schemas/error'
+        let!(:article_id) { 4534654 }
+        let!(:comment) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
+        let!(:id) { comment.id }
+        let!(:params) { { commenter: 'Commenter update', body: 'Comment text update', status: 'public' } }
 
         run_test!
       end
 
       response(404, 'Invalid request (Comment id not found)') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { 1 }
+        let!(:article_id) { article.id }
+        let!(:comment) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
+        let!(:id) { 4534654 }
         let!(:params) { { commenter: 'Commenter', body: 'Comment text', status: 'public' } }
-        let(:id) { 2 }
-        schema '$ref' => '#/components/schemas/error'
         
         run_test!
       end
 
       response(422, 'Invalid request (Can not parse given data)') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { 1 }
+        let!(:article_id) { article.id }
+        let!(:comment) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
+        let!(:id) { comment.id }
         let!(:params) { { commenter: '', body: 'Comment', status: 'public' } }
-        let(:id) { 1 }
+        
         schema '$ref' => '#/components/schemas/error'
 
         run_test!
@@ -167,29 +172,26 @@ RSpec.describe 'comments', type: :request do
 
       response(204, 'Successful request') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { 1 }
+        let!(:article_id) { article.id }
         let!(:comment) { article.comments.create(commenter: 'Comment', body: 'Comment text', status: 'public') }
-        let(:id) { 1 }
+        let!(:id) { comment.id }
 
         run_test!
       end
 
       response(404, 'Invalid request (Article id not found)') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { 2 }
+        let!(:article_id) { 4534654 }
         let!(:comment) { article.comments.create(commenter: 'Comment', body: 'Comment text', status: 'public') }
-        let(:id) { 1 }
-        schema '$ref' => '#/components/schemas/error'
+        let!(:id) { comment.id }
 
         run_test!
       end
 
       response(404, 'Invalid request (Comment id not found)') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { 1 }
-        let!(:comment) { article.comments.create(commenter: 'Comment', body: 'Comment text', status: 'public') }
-        let(:id) { 2 }
-        schema '$ref' => '#/components/schemas/error'
+        let!(:article_id) { article.id }
+        let!(:id) { 4534654 }
 
         run_test!
       end

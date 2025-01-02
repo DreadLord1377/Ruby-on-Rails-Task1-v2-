@@ -6,7 +6,7 @@ info:
 paths:
   "/":
     get:
-      summary: list articles
+      summary: 'list articles (first 10) '
       tags:
       - article
       responses:
@@ -16,9 +16,53 @@ paths:
             application/json:
               schema:
                 "$ref": "#components/schemas/article_show_list"
+  "/?page={page}":
+    get:
+      summary: list only necessary articles
+      tags:
+      - article
+      parameters:
+      - name: page
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                "$ref": "#components/schemas/article_show_list"
+  "/?page={page}&per_page={per_page}":
+    get:
+      summary: list only necessary articles
+      tags:
+      - article
+      parameters:
+      - name: page
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      - name: per_page
+        in: path
+        example: 10
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                "$ref": "#components/schemas/article_show_list"
   "/articles":
     get:
-      summary: list articles
+      summary: list articles (first 10)
       tags:
       - article
       responses:
@@ -62,6 +106,50 @@ paths:
                   type: string
                   example: public
         required: true
+  "/articles/?page={page}":
+    get:
+      summary: list only necessary articles
+      tags:
+      - article
+      parameters:
+      - name: page
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                "$ref": "#components/schemas/article_show_list"
+  "/articles/?page={page}&per_page={per_page}":
+    get:
+      summary: list only necessary articles
+      tags:
+      - article
+      parameters:
+      - name: page
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+      - name: per_page
+        in: path
+        example: 10
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                "$ref": "#components/schemas/article_show_list"
   "/articles/{id}":
     get:
       summary: show article
@@ -83,10 +171,6 @@ paths:
                 "$ref": "#components/schemas/article_show"
         '404':
           description: Invalid request (Id not found)
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/error"
     patch:
       summary: update article
       tags:
@@ -107,10 +191,6 @@ paths:
                 "$ref": "#components/schemas/article_show"
         '404':
           description: Invalid request (Id not found)
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/error"
         '422':
           description: Invalid request (Can not parse given data)
           content:
@@ -148,10 +228,6 @@ paths:
           description: Successful request
         '404':
           description: Invalid request (Id not found)
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/error"
   "/articles/{article_id}/comments":
     get:
       summary: list comments
@@ -191,10 +267,6 @@ paths:
                 "$ref": "#components/schemas/comment"
         '404':
           description: Invalid request (Article id not found)
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/error"
         '422':
           description: Invalid request (Can not parse given data)
           content:
@@ -244,10 +316,6 @@ paths:
                 "$ref": "#components/schemas/comment"
         '404':
           description: Invalid request (Comment id not found)
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/error"
         '422':
           description: Invalid request (Can not parse given data)
           content:
@@ -291,10 +359,6 @@ paths:
           description: Successful request
         '404':
           description: Invalid request (Comment id not found)
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/error"
 servers:
 - url: http://{defaultHost}
   variables:

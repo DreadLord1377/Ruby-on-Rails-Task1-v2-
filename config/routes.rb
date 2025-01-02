@@ -20,6 +20,8 @@ Rails.application.routes.draw do
     resources :comments
   end
 
+  get '*unmatched_route', to: 'application#not_found'
+  
   # get "/articles", to: "articles#index"
   # get "/articles/:id", to: "articles#show"
 end
