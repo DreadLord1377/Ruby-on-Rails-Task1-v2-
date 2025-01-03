@@ -12,7 +12,7 @@ RSpec.describe 'articles', type: :request do
       produces "application/json"
       include_context "show json"
 
-      include_context "GET successful response"
+      include_context "GET successful response for article-list"
     end
   end
 
@@ -26,7 +26,7 @@ RSpec.describe 'articles', type: :request do
 
       include_context "show json"
 
-      include_context "GET successful response"
+      include_context "GET successful response for article-list"
     end
   end
 
@@ -41,7 +41,7 @@ RSpec.describe 'articles', type: :request do
 
       include_context "show json"
 
-      include_context "GET successful response"
+      include_context "GET successful response for article-list"
     end
   end
 
@@ -52,7 +52,7 @@ RSpec.describe 'articles', type: :request do
       produces "application/json"
       include_context "show json"
 
-      include_context "GET successful response"
+      include_context "GET successful response for article-list"
     end
 
     post('create article') do
@@ -98,7 +98,7 @@ RSpec.describe 'articles', type: :request do
 
       include_context "show json"
 
-      include_context "GET successful response"
+      include_context "GET successful response for article-list"
     end
   end
 
@@ -113,7 +113,7 @@ RSpec.describe 'articles', type: :request do
 
       include_context "show json"
 
-      include_context "GET successful response"
+      include_context "GET successful response for article-list"
     end
   end
 
