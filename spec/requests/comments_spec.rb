@@ -1,4 +1,6 @@
 require 'swagger_helper'
+require './spec/requests/shared/show_json.rb'
+require './spec/requests/shared/show_json_by_id.rb'
 
 RSpec.describe 'comments', type: :request do
 
@@ -10,13 +12,7 @@ RSpec.describe 'comments', type: :request do
 
       parameter name: :article_id, in: :path, type: :integer, example: 1, required: :true
 
-      after do |example|
-        example.metadata[:response][:content] = {
-          'application/json' => {
-            example: JSON.parse(response.body, symbolize_names: true)
-          }
-        }
-      end
+      include_context "show json"
 
       response(200, 'Successful request') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
@@ -48,13 +44,7 @@ RSpec.describe 'comments', type: :request do
         }
       }
 
-      after do |example|
-        example.metadata[:response][:content] = {
-          'application/json' => {
-            example: JSON.parse(response.body, symbolize_names: true)
-          }
-        }
-      end
+      include_context "show json by id"
 
       response(201, 'Successful request') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
@@ -93,13 +83,7 @@ RSpec.describe 'comments', type: :request do
 
       produces "application/json"
 
-      after do |example|
-        example.metadata[:response][:content] = {
-          'application/json' => {
-            example: JSON.parse(response.body, symbolize_names: true)
-          }
-        }
-      end
+      include_context "show json"
 
       response(200, 'Successful request') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
@@ -125,13 +109,7 @@ RSpec.describe 'comments', type: :request do
 
       produces "application/json"
 
-      after do |example|
-        example.metadata[:response][:content] = {
-          'application/json' => {
-            example: JSON.parse(response.body, symbolize_names: true)
-          }
-        }
-      end
+      include_context "show json"
 
       response(200, 'Successful request') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
@@ -166,13 +144,7 @@ RSpec.describe 'comments', type: :request do
         }
       }
 
-      after do |example|
-        example.metadata[:response][:content] = {
-          'application/json' => {
-            example: JSON.parse(response.body, symbolize_names: true)
-          }
-        }
-      end
+      include_context "show json by id"
 
       response(200, 'Successful request') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
@@ -227,13 +199,7 @@ RSpec.describe 'comments', type: :request do
 
       produces "application/json"
 
-      after do |example|
-        example.metadata[:response][:content] = {
-          'application/json' => {
-            example: JSON.parse(response.body, symbolize_names: true)
-          }
-        }
-      end
+      include_context "show json by id"
 
       response(204, 'Successful request') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
