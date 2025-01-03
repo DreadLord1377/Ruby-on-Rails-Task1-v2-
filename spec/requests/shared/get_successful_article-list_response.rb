@@ -17,5 +17,5 @@ RSpec.shared_context "GET successful response for article-list", :shared_context
 end
 
 RSpec.configure do |rspec|
-  rspec.include_context "set default article params", :include_shared => true
+  rspec.include_context "GET successful response for article-list", :include_shared => true
 end
