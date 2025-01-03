@@ -1,4 +1,7 @@
 require 'swagger_helper'
+require './spec/requests/shared/show_json.rb'
+require './spec/requests/shared/show_json_by_id.rb'
+require './spec/requests/shared/get_successful_article-list_response.rb'
 
 RSpec.describe 'articles', type: :request do
 
@@ -7,25 +10,9 @@ RSpec.describe 'articles', type: :request do
       tags 'article'
 
       produces "application/json"
+      include_context "show json"
 
-      after do |example|
-        example.metadata[:response][:content] = {
-          'application/json' => {
-            example: JSON.parse(response.body, symbolize_names: true)
-          }
-        }
-      end
-
-      response(200, 'Successful request') do
-        let!(:article_1) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_2) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:page) { 1 }
-        let!(:per_page) { 10 }
-
-        schema '$ref' => '#components/schemas/article_show_list'
-
-        run_test!
-      end
+      include_context "GET successful response"
     end
   end
 
@@ -37,24 +24,9 @@ RSpec.describe 'articles', type: :request do
 
       parameter name: :page, in: :path, type: :integer, example: 1, required: :true
 
-      after do |example|
-        example.metadata[:response][:content] = {
-          'application/json' => {
-            example: JSON.parse(response.body, symbolize_names: true)
-          }
-        }
-      end
+      include_context "show json"
 
-      response(200, 'Successful request') do
-        let!(:article_1) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_2) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:page) { 1 }
-        let!(:per_page) { 10 }
-
-        schema '$ref' => '#components/schemas/article_show_list'
-
-        run_test!
-      end
+      include_context "GET successful response"
     end
   end
 
@@ -67,24 +39,9 @@ RSpec.describe 'articles', type: :request do
       parameter name: :page, in: :path, type: :integer, example: 1, required: :true
       parameter name: :per_page, in: :path, type: :integer, example: 10, required: :true
 
-      after do |example|
-        example.metadata[:response][:content] = {
-          'application/json' => {
-            example: JSON.parse(response.body, symbolize_names: true)
-          }
-        }
-      end
+      include_context "show json"
 
-      response(200, 'Successful request') do
-        let!(:article_1) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_2) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:page) { 1 }
-        let!(:per_page) { 10 }
-
-        schema '$ref' => '#components/schemas/article_show_list'
-
-        run_test!
-      end
+      include_context "GET successful response"
     end
   end
 
@@ -93,25 +50,9 @@ RSpec.describe 'articles', type: :request do
       tags 'article'
 
       produces "application/json"
+      include_context "show json"
 
-      after do |example|
-        example.metadata[:response][:content] = {
-          'application/json' => {
-            example: JSON.parse(response.body, symbolize_names: true)
-          }
-        }
-      end
-
-      response(200, 'Successful request') do
-        let!(:article_1) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_2) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:page) { 1 }
-        let!(:per_page) { 10 }
-
-        schema '$ref' => '#components/schemas/article_show_list'
-
-        run_test!
-      end
+      include_context "GET successful response"
     end
 
     post('create article') do
@@ -129,25 +70,19 @@ RSpec.describe 'articles', type: :request do
         }
       }
 
-      after do |example|
-        example.metadata[:response][:content] = {
-          'application/json' => {
-            example: JSON.parse(response.body, symbolize_names: true)
-          }
-        }
-      end
+      include_context "show json"
 
       response(201, 'Successful request') do
         let!(:params) { { title: 'Article', body: 'Article text', status: 'public' } }
-        schema '$ref' => '#components/schemas/article_show'
 
+        schema '$ref' => '#components/schemas/article_show'
         run_test!
       end
 
       response(422, 'Invalid request (Can not parse given data)') do
         let!(:params) { { title: '', body: 'Article', status: 'public' } }
-        schema '$ref' => '#/components/schemas/error'
 
+        schema '$ref' => '#/components/schemas/error'
         run_test!
       end
     end
@@ -161,24 +96,9 @@ RSpec.describe 'articles', type: :request do
 
       parameter name: :page, in: :path, type: :integer, example: 1, required: :true
 
-      after do |example|
-        example.metadata[:response][:content] = {
-          'application/json' => {
-            example: JSON.parse(response.body, symbolize_names: true)
-          }
-        }
-      end
+      include_context "show json"
 
-      response(200, 'Successful request') do
-        let!(:article_1) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_2) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:page) { 1 }
-        let!(:per_page) { 10 }
-
-        schema '$ref' => '#components/schemas/article_show_list'
-
-        run_test!
-      end
+      include_context "GET successful response"
     end
   end
 
@@ -191,24 +111,9 @@ RSpec.describe 'articles', type: :request do
       parameter name: :page, in: :path, type: :integer, example: 1, required: :true
       parameter name: :per_page, in: :path, type: :integer, example: 10, required: :true
 
-      after do |example|
-        example.metadata[:response][:content] = {
-          'application/json' => {
-            example: JSON.parse(response.body, symbolize_names: true)
-          }
-        }
-      end
+      include_context "show json"
 
-      response(200, 'Successful request') do
-        let!(:article_1) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_2) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:page) { 1 }
-        let!(:per_page) { 10 }
-
-        schema '$ref' => '#components/schemas/article_show_list'
-
-        run_test!
-      end
+      include_context "GET successful response"
     end
   end
 
@@ -221,21 +126,13 @@ RSpec.describe 'articles', type: :request do
 
       parameter name: :id, in: :path, type: :integer, example: 1, required: :true
 
-      after do |example|
-        if response.body.present?
-          example.metadata[:response][:content] = {
-            'application/json' => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
-          }
-        end
-      end
+      include_context "show json by id"
 
       response(200, 'Successful request') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
         let!(:id) { article.id }
-        schema '$ref' => '#components/schemas/article_show'
 
+        schema '$ref' => '#components/schemas/article_show'
         run_test!
       end
 
@@ -263,15 +160,7 @@ RSpec.describe 'articles', type: :request do
         }
       }   
 
-      after do |example|
-        if response.body.present?
-          example.metadata[:response][:content] = {
-            'application/json' => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
-          }
-        end
-      end
+      include_context "show json by id"
 
       response(200, 'Successful request') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
@@ -279,7 +168,6 @@ RSpec.describe 'articles', type: :request do
         let!(:id) { article.id }
 
         schema '$ref' => '#components/schemas/article_show'
-
         run_test!
       end
 
@@ -294,8 +182,8 @@ RSpec.describe 'articles', type: :request do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
         let!(:params) { { title: '', body: 'update', status: 'public' } }
         let!(:id) { article.id }
-        schema '$ref' => '#/components/schemas/error'
 
+        schema '$ref' => '#/components/schemas/error'
         run_test!
       end
     end
@@ -307,19 +195,11 @@ RSpec.describe 'articles', type: :request do
 
       parameter name: :id, in: :path, type: :integer, example: 1, required: :true
 
-      after do |example|
-        if response.body.present?
-          example.metadata[:response][:content] = {
-            'application/json' => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
-          }
-        end
-      end
+      include_context "show json by id"
 
       response(204, 'Successful request') do
         let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let(:id) { article.id }
+        let!(:id) { article.id }
 
         run_test!
       end
