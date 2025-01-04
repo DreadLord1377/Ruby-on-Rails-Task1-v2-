@@ -4,8 +4,12 @@ end
 
 RSpec.shared_context "set default article params", :shared_context => :metadata do
 
-  let!(:article_1) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-  let!(:article_2) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+  default_params = { title: 'Article', body: 'Article text', status: 'public' }
+  
+  let!(:article_1) { Article.create(default_params) }
+  let!(:article_2) { Article.create(default_params) }
+  let!(:article) { Article.create(default_params) }
+  let!(:id) { article.id }
   let!(:page) { 1 }
   let!(:per_page) { 10 }
 

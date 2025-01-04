@@ -1,6 +1,7 @@
 require 'swagger_helper'
 require './spec/requests/shared/show_json.rb'
 require './spec/requests/shared/show_json_by_id.rb'
+require './spec/requests/shared/get_successful_comment-list_response.rb'
 
 RSpec.describe 'comments', type: :request do
 
@@ -14,17 +15,7 @@ RSpec.describe 'comments', type: :request do
 
       include_context "show json"
 
-      response(200, 'Successful request') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { article.id }
-        let!(:comment_1) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
-        let!(:comment_2) { article.comments.create(commenter: 'Commenter2', body: 'Comment text2', status: 'public') }
-        let!(:page) { 1 }
-        let!(:per_page) { 10 }
-        schema '$ref' => '#components/schemas/comment_list'
-
-        run_test!
-      end
+      include_context "GET successful response for comment-list"
     end
 
     post('create comment') do
@@ -85,17 +76,7 @@ RSpec.describe 'comments', type: :request do
 
       include_context "show json"
 
-      response(200, 'Successful request') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { article.id }
-        let!(:comment_1) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
-        let!(:comment_2) { article.comments.create(commenter: 'Commenter2', body: 'Comment text2', status: 'public') }
-        let!(:page) { 1 }
-        let!(:per_page) { 10 }
-        schema '$ref' => '#components/schemas/comment_list'
-
-        run_test!
-      end
+      include_context "GET successful response for comment-list"
     end
   end
 
@@ -111,17 +92,7 @@ RSpec.describe 'comments', type: :request do
 
       include_context "show json"
 
-      response(200, 'Successful request') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { article.id }
-        let!(:comment_1) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
-        let!(:comment_2) { article.comments.create(commenter: 'Commenter2', body: 'Comment text2', status: 'public') }
-        let!(:page) { 1 }
-        let!(:per_page) { 10 }
-        schema '$ref' => '#components/schemas/comment_list'
-
-        run_test!
-      end
+      include_context "GET successful response for comment-list"
     end
   end
 

@@ -1,6 +1,7 @@
 require 'swagger_helper'
 require './spec/requests/shared/show_json.rb'
 require './spec/requests/shared/show_json_by_id.rb'
+require './spec/requests/shared/default_article_params.rb'
 require './spec/requests/shared/get_successful_article-list_response.rb'
 
 RSpec.describe 'articles', type: :request do
@@ -129,8 +130,7 @@ RSpec.describe 'articles', type: :request do
       include_context "show json by id"
 
       response(200, 'Successful request') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:id) { article.id }
+        include_context "set default article params"
 
         schema '$ref' => '#components/schemas/article_show'
         run_test!
@@ -163,9 +163,9 @@ RSpec.describe 'articles', type: :request do
       include_context "show json by id"
 
       response(200, 'Successful request') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        include_context "set default article params"
+
         let!(:params) { { title: 'Article update', body: 'Article text update', status: 'public' } }
-        let!(:id) { article.id }
 
         schema '$ref' => '#components/schemas/article_show'
         run_test!
@@ -179,9 +179,9 @@ RSpec.describe 'articles', type: :request do
       end
       
       response(422, 'Invalid request (Can not parse given data)') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+        include_context "set default article params"
+        
         let!(:params) { { title: '', body: 'update', status: 'public' } }
-        let!(:id) { article.id }
 
         schema '$ref' => '#/components/schemas/error'
         run_test!
@@ -198,8 +198,7 @@ RSpec.describe 'articles', type: :request do
       include_context "show json by id"
 
       response(204, 'Successful request') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:id) { article.id }
+        include_context "set default article params"
 
         run_test!
       end
