@@ -4,10 +4,15 @@ end
 
 RSpec.shared_context "set default comment params", :shared_context => :metadata do
 
-  let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
+  default_article_params = { title: 'Article', body: 'Article text', status: 'public' }
+  default_comment_params = { commenter: 'Commenter', body: 'Comment text', status: 'public' }
+
+  let!(:article) { Article.create(default_article_params) }
   let!(:article_id) { article.id }
-  let!(:comment_1) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
-  let!(:comment_2) { article.comments.create(commenter: 'Commenter2', body: 'Comment text2', status: 'public') }
+  let!(:comment_1) { article.comments.create(default_comment_params) }
+  let!(:comment_2) { article.comments.create(default_comment_params) }
+  let!(:comment) { article.comments.create(default_comment_params)}
+  let!(:id) { comment.id }
   let!(:page) { 1 }
   let!(:per_page) { 10 }
 

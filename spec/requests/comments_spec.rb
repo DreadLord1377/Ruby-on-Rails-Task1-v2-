@@ -1,6 +1,7 @@
 require 'swagger_helper'
 require './spec/requests/shared/show_json.rb'
 require './spec/requests/shared/show_json_by_id.rb'
+require './spec/requests/shared/default_comment_params'
 require './spec/requests/shared/get_successful_comment-list_response.rb'
 
 RSpec.describe 'comments', type: :request do
@@ -38,8 +39,8 @@ RSpec.describe 'comments', type: :request do
       include_context "show json by id"
 
       response(201, 'Successful request') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { article.id }
+        include_context "set default comment params"
+
         let!(:params) { { commenter: 'Commenter', body: 'Comment text', status: 'public' } }
         schema '$ref' => '#components/schemas/comment'
 
@@ -47,16 +48,18 @@ RSpec.describe 'comments', type: :request do
       end
 
       response(404, 'Invalid request (Article id not found)') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { 4534654 }
+        include_context "set default comment params" do
+          let!(:article_id) { 4534654 }
+        end
+
         let!(:params) { { commenter: 'Commenter', body: 'Comment text', status: 'public' } }
 
         run_test!
       end
 
       response(422, 'Invalid request (Can not parse given data)') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { article.id }
+        include_context "set default comment params"
+
         let!(:params) { { commenter: '', body: 'Comment', status: 'public' } }
         schema '$ref' => '#/components/schemas/error'
 
@@ -118,10 +121,8 @@ RSpec.describe 'comments', type: :request do
       include_context "show json by id"
 
       response(200, 'Successful request') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { article.id }
-        let!(:comment) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
-        let!(:id) { comment.id }
+        include_context "set default comment params"
+
         let!(:params) { { commenter: 'Commenter update', body: 'Comment text update', status: 'public' } }
 
         schema '$ref' => '#components/schemas/comment'
@@ -130,30 +131,28 @@ RSpec.describe 'comments', type: :request do
       end
 
       response(404, 'Invalid request (Article id not found)') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { 4534654 }
-        let!(:comment) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
-        let!(:id) { comment.id }
+        include_context "set default comment params" do
+          let!(:article_id) { 4534654 }
+        end
+
         let!(:params) { { commenter: 'Commenter update', body: 'Comment text update', status: 'public' } }
 
         run_test!
       end
 
       response(404, 'Invalid request (Comment id not found)') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { article.id }
-        let!(:comment) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
-        let!(:id) { 4534654 }
+        include_context "set default comment params" do
+          let!(:id) { 4534654 }
+        end
+
         let!(:params) { { commenter: 'Commenter', body: 'Comment text', status: 'public' } }
         
         run_test!
       end
 
       response(422, 'Invalid request (Can not parse given data)') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { article.id }
-        let!(:comment) { article.comments.create(commenter: 'Commenter', body: 'Comment text', status: 'public') }
-        let!(:id) { comment.id }
+        include_context "set default comment params"
+
         let!(:params) { { commenter: '', body: 'Comment', status: 'public' } }
         
         schema '$ref' => '#/components/schemas/error'
@@ -173,27 +172,23 @@ RSpec.describe 'comments', type: :request do
       include_context "show json by id"
 
       response(204, 'Successful request') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { article.id }
-        let!(:comment) { article.comments.create(commenter: 'Comment', body: 'Comment text', status: 'public') }
-        let!(:id) { comment.id }
+        include_context "set default comment params"
 
         run_test!
       end
 
       response(404, 'Invalid request (Article id not found)') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { 4534654 }
-        let!(:comment) { article.comments.create(commenter: 'Comment', body: 'Comment text', status: 'public') }
-        let!(:id) { comment.id }
+        include_context "set default comment params" do
+          let!(:article_id) { 4534654 }
+        end
 
         run_test!
       end
 
       response(404, 'Invalid request (Comment id not found)') do
-        let!(:article) { Article.create(title: 'Article', body: 'Article text', status: 'public') }
-        let!(:article_id) { article.id }
-        let!(:id) { 4534654 }
+        include_context "set default comment params" do
+          let!(:id) { 4534654 }
+        end
 
         run_test!
       end
