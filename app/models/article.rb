@@ -1,6 +1,4 @@
 class Article < ApplicationRecord
-  #JSON_SCHEMA = "#{Rails.root}/app/spec/swagger_helper.rb"
-
   include Visible
 
   has_many :comments, dependent: :destroy
@@ -13,6 +11,13 @@ class Article < ApplicationRecord
 
   #creation callback
   after_create :log_errors
+
+  #save callback
+  before_save do
+    throw :abort if title.length > 25
+  end
+
+  after_save :log_errors
 
   #update callback
   after_update :log_errors

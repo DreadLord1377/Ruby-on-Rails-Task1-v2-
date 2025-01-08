@@ -12,6 +12,13 @@ class Comment < ApplicationRecord
   #creation callback
   after_create :log_errors
 
+  #save callback
+  before_save do
+    throw :abort if commenter.length > 100
+  end
+
+  after_save :log_errors
+
   #update callback
   after_update :log_errors
 
